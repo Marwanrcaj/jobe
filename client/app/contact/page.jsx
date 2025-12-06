@@ -465,7 +465,7 @@ export default function ContactPage() {
                     }`}
                   >
                     <FontAwesomeIcon icon={faSignInAlt} className="ml-2" />
-                    دخول
+                   Login
                   </motion.button>
                   
                   <motion.button
@@ -482,7 +482,7 @@ export default function ContactPage() {
                     }`}
                   >
                     <FontAwesomeIcon icon={faUserPlus} className="ml-2" />
-                    تسجيل
+                     Sign Up
                   </motion.button>
                 </div>
               </nav>
