@@ -59,7 +59,271 @@ import { faPaypal } from '@fortawesome/free-brands-svg-icons';
 import MyBody from './MyBody';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
+import logo from './logo.png'; // Fixed import path
 
+// Image Logo Component (Fixed)
+const ImageLogo = ({ darkMode, size = 'normal', animated = true }) => {
+  const dimensions = {
+    normal: { width: 40, height: 40 },
+    large: { width: 80, height: 80 },
+    small: { width: 32, height: 32 }
+  };
+
+  const { width, height } = dimensions[size];
+
+  return (
+    <motion.div
+      className="relative"
+      animate={animated ? {
+        rotate: [0, 5, 0, -5, 0],
+      } : {}}
+      transition={animated ? {
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut"
+      } : {}}
+    >
+      {/* Outer glow effect - keeping for image */}
+      <motion.div
+        animate={animated ? {
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.5, 0.3]
+        } : {}}
+        transition={animated ? {
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        } : {}}
+        className={`absolute -inset-2 rounded-full ${
+          darkMode 
+            ? 'bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-purple-500/20' 
+            : 'bg-gradient-to-r from-cyan-400/20 via-blue-400/20 to-purple-400/20'
+        } blur-sm`}
+      />
+      
+      {/* Image logo instead of SVG - FIXED: Using imported logo */}
+      <motion.div
+        className="relative z-10 rounded-full overflow-hidden"
+        style={{ width, height }}
+        whileHover={{ scale: animated ? 1.1 : 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        {/* Use the imported logo variable */}
+        <Image
+          src={logo}  // FIXED: Using imported logo
+          alt="TSRA Logo"
+          width={width}
+          height={height}
+          className="object-cover rounded-full"
+          priority
+        />
+      </motion.div>
+      
+      {/* Optional floating sparkles for animated version */}
+      {animated && (
+        <>
+          <motion.div
+            className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-yellow-300 z-20"
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute -bottom-1 -left-1 w-1 h-1 rounded-full bg-cyan-300 z-20"
+            animate={{
+              scale: [1, 2, 1],
+              opacity: [0.3, 0.8, 0.3]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.5
+            }}
+          />
+        </>
+      )}
+    </motion.div>
+  );
+};
+
+// Full Logo with Text Component (Updated to use ImageLogo)
+const VyraFullLogo = ({ darkMode, variant = 'header', animated = true }) => {
+  if (variant === 'header') {
+    return (
+      <div className="flex items-center space-x-3">
+        <Link href="/">
+          <div className="flex items-center space-x-3 cursor-pointer group">
+            <ImageLogo darkMode={darkMode} size="normal" animated={animated} />
+            
+            <div className="flex flex-col">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="relative"
+              >
+                <h1 className="text-xl font-bold">
+                  <span className="relative">
+                    <motion.span
+                      className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent"
+                      animate={animated ? {
+                        backgroundPosition: ["0%", "200%"],
+                      } : {}}
+                      transition={animated ? {
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "linear"
+                      } : {}}
+                      style={{
+                        backgroundSize: "200% 100%",
+                      }}
+                    >
+                      TSRA
+                    </motion.span>
+                    <span className="text-transparent">TSRA</span>
+                  </span>
+                </h1>
+                
+                <motion.div
+                  className="h-0.5 w-full bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 rounded-full mt-1"
+                  animate={animated ? {
+                    scaleX: [0.8, 1, 0.8],
+                  } : {}}
+                  transition={animated ? {
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  } : {}}
+                />
+              </motion.div>
+              
+              <motion.div
+                className="text-xs opacity-70 tracking-widest font-light mt-0.5"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.7 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                
+              </motion.div>
+            </div>
+          </div>
+        </Link>
+      </div>
+    );
+  }
+
+  // For intro/large variant
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <motion.div
+        className="relative mb-6"
+        animate={animated ? {
+          scale: [1, 1.05, 1],
+          rotate: [0, 5, 0, -5, 0]
+        } : {}}
+        transition={animated ? {
+          scale: {
+            duration: 3,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut"
+          },
+          rotate: {
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }
+        } : {}}
+      >
+        <ImageLogo darkMode={darkMode} size="large" animated={animated} />
+        
+        {/* Pulsing rings */}
+        {animated && (
+          <>
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-cyan-400/30"
+              animate={{
+                scale: [1, 1.5, 2],
+                opacity: [0.5, 0.3, 0]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeOut"
+              }}
+            />
+            <motion.div
+              className="absolute inset-0 rounded-full border border-purple-400/20"
+              animate={{
+                scale: [1, 1.8, 2.2],
+                opacity: [0.3, 0.2, 0]
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeOut",
+                delay: 0.5
+              }}
+            />
+          </>
+        )}
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="text-center"
+      >
+        <h1 className="text-5xl font-bold mb-4">
+          <span className="relative">
+            <motion.span
+              className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent"
+              animate={animated ? {
+                backgroundPosition: ["0%", "200%"],
+              } : {}}
+              transition={animated ? {
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear"
+              } : {}}
+              style={{
+                backgroundSize: "200% 100%",
+              }}
+            >
+              TSRA
+            </motion.span>
+            <span className="text-transparent">TSRA</span>
+          </span>
+        </h1>
+        
+        <motion.div
+          className="h-1 w-48 mx-auto bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 rounded-full mb-4"
+          animate={animated ? {
+            scaleX: [0.8, 1, 0.8],
+          } : {}}
+          transition={animated ? {
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          } : {}}
+        />
+        
+        <p className="text-xl opacity-80 tracking-wider">
+          <span className="bg-gradient-to-r from-cyan-300 to-purple-300 bg-clip-text text-transparent">
+            Wave Your Web Experience
+          </span>
+        </p>
+      </motion.div>
+    </div>
+  );
+};
 export default function Page() {
   const [showLogin, setShowLogin] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -292,7 +556,7 @@ export default function Page() {
     const currentPath = pathname;
     if (currentPath === '/') setActiveLink('home');
     else if (currentPath === '/about') setActiveLink('about');
-    else if (currentPath === '/partners') setActiveLink('partners');
+    else if (currentPath === '/Community') setActiveLink('Community');
     else if (currentPath === '/contact') setActiveLink('contact');
     
     const hasSeenIntro = sessionStorage.getItem('hasSeenIntro');
@@ -449,7 +713,7 @@ export default function Page() {
   const navItems = [
     { id: 'home', label: 'Home', href: '/' },
     { id: 'about', label: 'About', href: '/about' },
-    { id: 'partners', label: 'Partners', href: '/partners' },
+    { id: 'Community', label: 'Community', href: '/Community' },
     { id: 'contact', label: 'Contact', href: '/contact' }
   ];
 
@@ -521,93 +785,27 @@ export default function Page() {
               }}
               className="relative"
             >
-              <div className="relative">
-                <motion.div
-                  animate={{
-                    rotate: 360,
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{
-                    rotate: { duration: 3, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 2, repeat: Infinity, repeatType: "reverse" }
-                  }}
-                  className={`absolute -inset-4 rounded-full border-2 ${
-                    darkMode 
-                      ? 'border-cyan-500/30' 
-                      : 'border-blue-500/30'
-                  }`}
-                />
-                
-                <motion.div
-                  animate={{
-                    rotate: -360,
-                    scale: [1.1, 1, 1.1]
-                  }}
-                  transition={{
-                    rotate: { duration: 2.5, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 1.5, repeat: Infinity, repeatType: "reverse" }
-                  }}
-                  className={`absolute -inset-2 rounded-full border ${
-                    darkMode 
-                      ? 'border-purple-500/50' 
-                      : 'border-purple-500/40'
-                  }`}
-                />
-                
-                <motion.div
-                  animate={{
-                    scale: [1, 1.2, 1],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    repeatType: "reverse"
-                  }}
-                  className={`w-20 h-20 rounded-xl flex items-center justify-center shadow-2xl ${
-                    darkMode 
-                      ? 'bg-gradient-to-br from-blue-700 via-cyan-600 to-purple-600' 
-                      : 'bg-gradient-to-br from-blue-600 via-cyan-500 to-purple-500'
-                  }`}
-                >
-                  <FontAwesomeIcon 
-                    icon={faStar} 
-                    className={`text-3xl ${
-                      darkMode ? 'text-white' : 'text-white'
+              <VyraFullLogo darkMode={darkMode} variant="intro" animated={true} />
+              
+              <div className="flex justify-center mt-10 space-x-2">
+                {[0, 1, 2].map((i) => (
+                  <motion.div
+                    key={i}
+                    animate={{
+                      scale: [1, 1.5, 1],
+                      opacity: [0.5, 1, 0.5]
+                    }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      delay: i * 0.2
+                    }}
+                    className={`w-2 h-2 rounded-full ${
+                      darkMode ? 'bg-cyan-400' : 'bg-blue-500'
                     }`}
                   />
-                </motion.div>
+                ))}
               </div>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-                className="mt-8 text-center"
-              >
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
-                  Lkhadma-Lik
-                </h1>
-           
-                <div className="flex justify-center mt-6 space-x-2">
-                  {[0, 1, 2].map((i) => (
-                    <motion.div
-                      key={i}
-                      animate={{
-                        scale: [1, 1.5, 1],
-                        opacity: [0.5, 1, 0.5]
-                      }}
-                      transition={{
-                        duration: 1,
-                        repeat: Infinity,
-                        delay: i * 0.2
-                      }}
-                      className={`w-2 h-2 rounded-full ${
-                        darkMode ? 'bg-cyan-400' : 'bg-blue-500'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </motion.div>
             </motion.div>
             
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -1261,41 +1459,8 @@ export default function Page() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: introComplete ? 0.5 : 0 }}
-                  className="flex items-center space-x-3"
                 >
-                  <Link href="/" onClick={() => handleNavClick('home')}>
-                    <div className="relative">
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.05, 1],
-                        }}
-                        transition={{
-                          duration: 4,
-                          repeat: Infinity,
-                          repeatType: "reverse"
-                        }}
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                          darkMode 
-                            ? 'bg-gradient-to-br from-blue-700 to-cyan-600 shadow-lg' 
-                            : 'bg-gradient-to-br from-blue-600 to-cyan-500 shadow-lg'
-                        }`}
-                      >
-                        <FontAwesomeIcon 
-                          icon={faStar} 
-                          className="text-white text-sm"
-                        />
-                      </motion.div>
-                    </div>
-                  </Link>
-                  
-                  <div className="flex flex-col">
-                    <a onClick={() => handleNavClick('home')} className="text-xl font-bold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-                      Lkhadma-Like
-                    </a>
-                    <div className="text-xs opacity-70 tracking-widest font-light text-purple-400">
-               
-                    </div>
-                  </div>
+                  <VyraFullLogo darkMode={darkMode} variant="header" animated={true} />
                 </motion.div>
 
                 <nav className="hidden md:flex items-center space-x-6">
@@ -1364,7 +1529,7 @@ export default function Page() {
                       <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
                     </motion.button>
 
-                    {/* Premium Button - Replaces Font Button */}
+                    {/* Premium Button */}
                     <motion.button
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
